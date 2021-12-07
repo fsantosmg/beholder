@@ -1,7 +1,50 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
+import {doLogout} from "../services/AuthService";
+import { getSettings } from "../services/SettingsService";
 
 function Settings() {
+
+    const history = useHistory();
+    const [error, setError] = useState('');
+
+    const [settings, setSettings] = useState({
+        email: '',
+        apiUrl: '',
+        accessKey: '',
+        keySecret: '',
+    })
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        getSettings(token)
+            .then(response => {
+                setSettings(response);
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 401)
+                    return history.push('/');
+                if (error.response)
+                    setError(error.response.data);
+                else
+                    setError(error.message);
+            })
+    }, [])
+
+    function onLogoutClick(event) {
+        const token = localStorage.getItem('token');
+
+        doLogout(token)
+            .then(response => {
+                localStorage.removeItem('token');
+                history.push('/')
+            })
+            .catch(error => {
+                setError(error.message)
+            })
+
+    }
+
     return (
         <main>
             <section className="vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
@@ -16,6 +59,7 @@ function Settings() {
                             </svg>
                             Settings
                         </Link>
+                        <button type="button" className="btn btn-primary" onClick={onLogoutClick}>Sair</button>
                     </p>
                 </div>
             </section>

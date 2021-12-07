@@ -16,14 +16,16 @@ function Login() {
 
     function onSubmit(event) {
         event.preventDefault();
-        const isValid = doLogin(email, password)
-            .then(isValid => {
-                if (isValid) {
+        doLogin(email, password)
+            .then(response => {
+                if (response) {
+                    localStorage.setItem('token', response.token);
                     history.push('/settings');
                 }
             })
             .catch(error => {
-                setError(error)
+                console.error(error);
+                setError(`Usuário e/ou senha inválidos`);
             })
 
     }

@@ -1,9 +1,17 @@
-export function doLogin(email, password) {
-    return new Promise((response, reject)=>{
+import axios from 'axios';
 
-        if(email === 'teste@mail.com' && password === '123'){
-            response(true);
-        }
-        reject(`E-mail e/ou senha inválidos`);
-    });
+const API_URL = process.env.REACT_APP_API_URL;
+
+export async function doLogin(email, password) {
+    const loginUrl = `${API_URL}/login`;
+    const response = await axios.post(loginUrl,{email, password});
+    return response.data;
+
+}
+
+export async function doLogout(token) {
+    const lgoutUrl = `${API_URL}/logout`;
+    const headers = {'authorization': token}
+    const response = await axios.post(lgoutUrl);
+    return response.data;
 }

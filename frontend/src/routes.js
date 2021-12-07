@@ -1,19 +1,28 @@
 import React from "react";
-import {BrowserRouter, Route, Router} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Router} from 'react-router-dom';
 import Login from "./public/Login/Login";
 import Settings from "./private/Settings";
 
 function Routes() {
 
-    return(
+   function PrivateRouter({children, ...rest}) {
+        return (
+            <Route{...rest} render={() => {
+                return localStorage.getItem('token') ? children : <Redirect to="/"/>
+            }}/>
+        )
+    };
+
+    return (
         <BrowserRouter>
             <Route path="/" exact>
                 <Login/>
             </Route>
-            <Route path="/settings" >
+            <PrivateRouter path="/settings">
                 <Settings/>
-            </Route>
+            </PrivateRouter>
         </BrowserRouter>
     )
 }
+
 export default Routes;

@@ -1,17 +1,20 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
 
-export async function doLogin(email, password) {
- const loginUrl = `${API_URL}/login`;
- const response = await axios.post(loginUrl,{email, password});
- return response.data;
+const SETTINGS_URL = `${process.env.REACT_APP_API_URL}/settings` || 'http://localhost:3001/settings';
 
+export async function getSettings(token) {
+
+    const headers = {
+        'authorization': token
+    }
+
+    const response = await axios.get(SETTINGS_URL, { headers });
+    return response.data;
 }
 
-export async function doLogout(token) {
-    const loginUrl = `${API_URL}/logout`;
-    const headers ={'authorization': token}
-    const response = await axios.post(loginUrl);
+export async function updateSettings(settings, token) {
+    const headers = { 'authorization': token };
+    const response = await axios.patch(SETTINGS_URL, settings, { headers });
     return response.data;
 }

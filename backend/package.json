@@ -7,7 +7,8 @@
     "start": "node -r dotenv/config ./src/server.js",
     "dev": "npx nodemon -r dotenv/config ./src/server",
     "createdb": "npx sequelize-cli db:create",
-    "migratedb": "npx sequelize-cli db:migrate"
+    "migratedb": "npx sequelize-cli db:migrate",
+    "seeddb": "npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "express-async-errors": "^3.1.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "sequelize": "^6.12.0-alpha.1"
   }

@@ -1,7 +1,6 @@
 const express = require('express');
 const authMiddleware = require('./middlewares/authMiddleware');
 const authController = require('./controllers/authController');
-const settingsController = require("./controllers/settingsController");
 const morgan = require('morgan');
 
 require('express-async-errors')
@@ -22,9 +21,10 @@ app.use(morgan('dev'));
 
 app.post('/login', authController.doLogin);
 
-app.get('/settings', authMiddleware, settingsController.getSettings);
-
-app.patch('/settings', authMiddleware, settingsController.updateSettings);
+const settingsRouter = require('./routers/settingsRouter');
+app.use('/settings', authMiddleware, settingsRouter);
+const symbosRouter = require('./routers/symbolsRouter');
+app.use('/symbols', authMiddleware, symbosRouter);
 
 app.post('/logout', authController.doLogout);
 

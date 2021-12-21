@@ -4,13 +4,12 @@ const database = require('../db');
 const symbolModel = database.define('symbol', {
     symbol: {
         type: Sequelize.STRING,
-        autoIncrement: false,
         allowNull: false,
         primaryKey: true
     },
     basePrecision: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
     },
     quotePrecision: {
         type: Sequelize.INTEGER,
@@ -29,10 +28,10 @@ const symbolModel = database.define('symbol', {
         defaultValue: false,
         allowNull: false
     },
-
+    base: Sequelize.STRING,
+    quote: Sequelize.STRING,
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
+})
 
-});
-
-module.exports = symbolModel;
+module.exports = symbolModel

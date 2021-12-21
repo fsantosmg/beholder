@@ -2,6 +2,24 @@ const settingsModel = require('../models/settingsModel');
 const bcrypt = require('bcryptjs')
 const crypto = require('../utils/crypto')
 
+
+const settingsCache = {};
+async function getSetingsDecrypted(id) {
+    let settings = settingsCache[id];
+
+    if (!settings) {
+        settings = await getSettings(id);
+        settings.secretKey = crypto.decrypt(settings.secretKey);
+        settingsCache[id] = settings;
+    }
+
+    return settings;
+}
+
+function clearSettingsCache(id) {
+    settingsCache[id] = null;
+}
+
 function getSettingsByEmail(email) {
     return settingsModel.findOne({where: {email}});
 }
@@ -10,26 +28,41 @@ function getSettings(id) {
     return settingsModel.findOne({where: {id}});
 }
 
+async function getDefaultSettings() {
+    return settingsModel.findOne();
+}
+
 async function updateSettings(id, newSettings) {
     const currentSettings = await getSettings(id);
-    if (newSettings.email !== currentSettings.email)
+
+    if (newSettings.email && newSettings.email !== currentSettings.email)
         currentSettings.email = newSettings.email;
+
     if (newSettings.password)
-        currentSettings.password = bcrypt.hash(newSettings.password);
-    if (newSettings.apiUrl !== currentSettings.apiUrl)
+        currentSettings.password = bcrypt.hashSync(newSettings.password);
+
+    if (newSettings.apiUrl && newSettings.apiUrl !== currentSettings.apiUrl)
         currentSettings.apiUrl = newSettings.apiUrl;
-    if (newSettings.accessKey !== currentSettings.accessKey)
+
+    if (newSettings.streamUrl && newSettings.streamUrl !== currentSettings.streamUrl)
+        currentSettings.streamUrl = newSettings.streamUrl;
+
+    if (newSettings.accessKey && newSettings.accessKey !== currentSettings.accessKey)
         currentSettings.accessKey = newSettings.accessKey;
-    if (newSettings.secretKey )
+
+    if (newSettings.secretKey) {
         currentSettings.secretKey = crypto.encrypt(newSettings.secretKey);
+        clearSettingsCache(id);
+    }
 
     await currentSettings.save();
-
 }
 
 
 module.exports = {
     getSettingsByEmail,
     getSettings,
-    updateSettings
+    updateSettings,
+    getDefaultSettings,
+    getSetingsDecrypted
 };

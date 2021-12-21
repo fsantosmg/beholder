@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useRef} from "react";
 import {useHistory} from "react-router-dom";
-import {getSettings, updateSettings} from "../services/SettingsService";
-import Menu from "../components/Menu/Menu";
+import {getSettings, updateSettings} from "../../services/SettingsService";
+import Menu from "../../components/Menu/Menu";
+import Symbols from "./Symbols";
 
 
 function Settings() {
@@ -17,14 +18,6 @@ function Settings() {
     const history = useHistory();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
-
-    const [settings, setSettings] = useState({
-        email: '',
-        apiUrl: '',
-        accessKey: '',
-        keySecret: '',
-    })
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -108,7 +101,7 @@ function Settings() {
                                         <div>
                                             <label htmlFor="newPassword">Nova Senha</label>
                                             <input ref={inputNewPassword} className="form-control" id="newPassword"
-                                                   type="password" placeholder="Digite aqui a nova senha"/>
+                                                   type="password" placeholder=""/>
                                         </div>
                                     </div>
                                     <div className="col-md-6 mb-3">
@@ -116,7 +109,7 @@ function Settings() {
                                             <label htmlFor="confirmPassword">Confirme a Senha</label>
                                             <input ref={inputConfirmPassword} className="form-control"
                                                    id="confirmPassword" type="password"
-                                                   placeholder="Confirme a nova senha"/>
+                                                   placeholder=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +173,7 @@ function Settings() {
                         </div>
                     </div>
                 </div>
-
+            <Symbols/>
             </main>
         </React.Fragment>
     )

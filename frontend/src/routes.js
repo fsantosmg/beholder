@@ -1,7 +1,8 @@
 import React from "react";
 import {BrowserRouter, Redirect, Route, Router} from 'react-router-dom';
 import Login from "./public/Login/Login";
-import Settings from "./private/Settings";
+import Settings from "./private/Settings/Settings";
+import Dashboard from "./private/Dashboard/Dashboard";
 
 function Routes() {
 
@@ -20,6 +21,9 @@ function Routes() {
             </Route>
             <PrivateRouter path="/settings">
                 <Settings/>
+            </PrivateRouter>
+            <PrivateRouter path="/dashboard">
+                <Dashboard/>
             </PrivateRouter>
         </BrowserRouter>
     )

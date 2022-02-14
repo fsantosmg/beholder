@@ -14,3 +14,12 @@
     overflow:auto;
     max-height:300px;
 }
+
+.divTradingView {
+    height: 500px;
+}
+
+.cardDark{
+    /*background-color: #1F2937FF;*/
+    background-color: #1F2937FF;
+}

@@ -10,10 +10,15 @@ module.exports = (settings) => {
         APISECRET: settings.secretKey,
         recvWindow: 60000,
         urls: {
-            base: settings.apiUrl.endsWith('/') ? settings.apiUrl : settings.apiUrl + '/'
+            base: settings.apiUrl.endsWith('/') ? settings.apiUrl : settings.apiUrl + '/',
+            stream: settings.streamUrl.endsWith('/') ? settings.streamUrl : settings.streamUrl + '/',
         },
         verbose: LOGS
     });
+
+    function balance() {
+        return binance.balance();
+    }
 
     function exchangeInfo() {
         return binance.exchangeInfo();
@@ -24,12 +29,24 @@ module.exports = (settings) => {
     }
 
     function bookStream(callback) {
-        binance.websockets.bookTickers(orders => callback(orders));
+        binance.websockets.bookTickers(order => {
+            callback(order)
+        });
+    }
+
+    async function userDataStream(balaceCallback, executionCallback, listStatusCallback) {
+        binance.websockets.userData(
+            balance => balaceCallback(balance),
+            executionData => executionCallback(executionData),
+            subscribedData => console.log(`userDataStream:subscribeEvent: ${JSON.stringify(subscribedData)}`),
+            listStatusData => listStatusCallback(listStatusData));
     }
 
     return {
         exchangeInfo,
         miniTickerStream,
-        bookStream
+        bookStream,
+        userDataStream,
+        balance
     }
 }

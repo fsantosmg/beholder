@@ -19,12 +19,15 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-app.post('/login', authController.doLogin);
-
 const settingsRouter = require('./routers/settingsRouter');
+const symbolsRouter = require('./routers/symbolsRouter');
+const exchangeRouter = require('./routers/exchangeRouter');
+
+app.post('/login', authController.doLogin);
 app.use('/settings', authMiddleware, settingsRouter);
-const symbosRouter = require('./routers/symbolsRouter');
-app.use('/symbols', authMiddleware, symbosRouter);
+
+app.use('/symbols', authMiddleware, symbolsRouter);
+app.use('/exchange', authMiddleware, exchangeRouter);
 
 app.post('/logout', authController.doLogout);
 

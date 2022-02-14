@@ -4,17 +4,6 @@ const crypto = require('../utils/crypto')
 
 
 const settingsCache = {};
-async function getSetingsDecrypted(id) {
-    let settings = settingsCache[id];
-
-    if (!settings) {
-        settings = await getSettings(id);
-        settings.secretKey = crypto.decrypt(settings.secretKey);
-        settingsCache[id] = settings;
-    }
-
-    return settings;
-}
 
 function clearSettingsCache(id) {
     settingsCache[id] = null;
@@ -28,8 +17,20 @@ function getSettings(id) {
     return settingsModel.findOne({where: {id}});
 }
 
+async function getDecryptedSettings(id) {
+    let settings = settingsCache[id];
+
+    if (!settings) {
+        settings = await getSettings(id);
+        settings.secretKey = crypto.decrypt(settings.secretKey);
+        settingsCache[id] = settings;
+    }
+    return settings;
+}
+
 async function getDefaultSettings() {
-    return settingsModel.findOne();
+    const settings = await settingsModel.findOne();
+    return getDecryptedSettings(settings.id);
 }
 
 async function updateSettings(id, newSettings) {
@@ -64,5 +65,5 @@ module.exports = {
     getSettings,
     updateSettings,
     getDefaultSettings,
-    getSetingsDecrypted
+    getDecryptedSettings
 };

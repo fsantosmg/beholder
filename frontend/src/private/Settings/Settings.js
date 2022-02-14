@@ -11,9 +11,9 @@ function Settings() {
     const inputNewPassword = useRef('');
     const inputConfirmPassword = useRef('');
     const inputApiUrl = useRef('');
+    const inputStreamUrl = useRef('');
     const inputAccessKey = useRef('');
     const inputSecretKey = useRef('');
-    const inputStreamUrl = useRef('');
 
     const history = useHistory();
     const [error, setError] = useState('');
@@ -25,6 +25,7 @@ function Settings() {
             .then(settings => {
                 inputEmail.current.value = settings.email;
                 inputApiUrl.current.value = settings.apiUrl;
+                inputStreamUrl.current.value = settings.streamUrl;
                 inputAccessKey.current.value = settings.accessKey;
             })
             .catch(error => {
@@ -48,6 +49,7 @@ function Settings() {
             email: inputEmail.current.value,
             password: inputNewPassword.current.value ? inputNewPassword.current.value : null,
             apiUrl: inputApiUrl.current.value,
+            streamUrl: inputStreamUrl.current.value,
             accessKey: inputAccessKey.current.value,
             secretKey: inputSecretKey.current.value ? inputSecretKey.current.value : null,
         }, token)
